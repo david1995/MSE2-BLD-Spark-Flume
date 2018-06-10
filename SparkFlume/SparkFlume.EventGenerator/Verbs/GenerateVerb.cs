@@ -1,9 +1,8 @@
 ﻿using System;
-using System.IO;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Newtonsoft.Json;
@@ -18,14 +17,15 @@ namespace SparkFlume.EventGenerator.Verbs
 {
     public class GenerateVerb
     {
-        public async Task<int> Execute(GenerateParameters parameters)
+        private readonly AutoResetEvent _autoResetEvent = new AutoResetEvent(false);
+
+        public Task<int> Execute(GenerateParameters parameters)
         {
             var mapperConfiguration = new AutoMapperConfiguration();
             Mapper.Initialize(mapperConfiguration.Configure);
 
             var generator = new Generator(
                 new Random(),
-                TimeSpan.FromMilliseconds(parameters.Interval),
                 parameters.ProductIdMin,
                 parameters.ProductIdMax,
                 parameters.CustomerIdMin,
@@ -45,16 +45,40 @@ namespace SparkFlume.EventGenerator.Verbs
             LogManager.Configuration = config;
 
             var logger = LogManager.GetCurrentClassLogger();
+            var cancellationTokenSource = new CancellationTokenSource();
+            Task.WaitAll(ToggleSignalStateTaskAsync(parameters, cancellationTokenSource), GeneratorTask(parameters, generator, logger, cancellationTokenSource));
+
+            return Task.FromResult(0);
+        }
+
+        private async Task ToggleSignalStateTaskAsync(GenerateParameters parameters, CancellationTokenSource cancellationTokenSource)
+        {
+            var intervalTimeSpan = TimeSpan.FromMilliseconds(parameters.Interval);
+            while (!cancellationTokenSource.IsCancellationRequested)
+            {
+                await Task.Delay(intervalTimeSpan, cancellationTokenSource.Token);
+                _autoResetEvent.Set();
+            }
+        }
+
+        private async Task GeneratorTask(GenerateParameters parameters, Generator generator, ILogger logger, CancellationTokenSource cancellationTokenSource)
+        {
             using (var httpClient = new HttpClient())
             {
-                while (true)
+                while (!cancellationTokenSource.IsCancellationRequested)
                 {
-                    var nextEvent = await generator.GetNextEvent();
+                    _autoResetEvent.WaitOne();
+                    var nextEvent = generator.GetNextEvent();
                     var nextEventDto = Mapper.Map<EventDto>(nextEvent);
                     string nextEventJson = JsonConvert.SerializeObject(nextEventDto);
 
                     // log
                     logger.Info($"Sending event \"{nextEventJson}\"");
+
+                    if (parameters.Demo)
+                    {
+                        continue;
+                    }
 
                     // send to flume
                     var targetUri = nextEvent is PurchaseEvent _

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Net;
 using CommandLine;
 
 namespace SparkFlume.EventGenerator.Verbs
@@ -24,16 +23,19 @@ namespace SparkFlume.EventGenerator.Verbs
         [Option(Default = 100_000, HelpText = "Specifies the maximum customer ID.")]
         public int CustomerIdMax { get; set; } = 100_000;
 
-        [Option(Default = 10, HelpText = "Specifies the minimum revenue.")]
-        public decimal RevenueMin { get; set; } = 10;
+        [Option(HelpText = "Specifies the minimum revenue.")]
+        public decimal RevenueMin { get; set; } = 10M;
 
-        [Option(Default = 1000, HelpText = "Specifies the maximum revenue.")]
-        public decimal RevenueMax { get; set; } = 1000;
+        [Option(HelpText = "Specifies the maximum revenue.")]
+        public decimal RevenueMax { get; set; } = 1000M;
 
         [Option(Required = true, HelpText = @"Specifies the target Uri for purchase events.")]
         public Uri PurchasesTarget { get; set; }
 
         [Option(Required = true, HelpText = @"Specifies the target Uri for view events.")]
         public Uri ViewsTarget { get; set; }
+
+        [Option(Default = false, HelpText = @"Specifies whether data should be sent to the specified IP addresses.")]
+        public bool Demo { get; set; } = false;
     }
 }

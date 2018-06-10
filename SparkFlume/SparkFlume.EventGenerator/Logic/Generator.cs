@@ -6,7 +6,6 @@ namespace SparkFlume.EventGenerator.Logic
 {
     public class Generator
     {
-        private readonly TimeSpan _generationTimeout;
         private readonly Random _random;
         private readonly int _minProductId;
         private readonly int _maxProductId;
@@ -15,10 +14,9 @@ namespace SparkFlume.EventGenerator.Logic
         private readonly decimal _minRevenue;
         private readonly decimal _maxRevenue;
 
-        public Generator(Random randomGenerator, TimeSpan generationTimeout, int minProductId, int maxProductId, int minCustomerId, int maxCustomerId, decimal minRevenue, decimal maxRevenue)
+        public Generator(Random randomGenerator, int minProductId, int maxProductId, int minCustomerId, int maxCustomerId, decimal minRevenue, decimal maxRevenue)
         {
             _random = randomGenerator ?? throw new ArgumentNullException(nameof(randomGenerator));
-            _generationTimeout = generationTimeout;
             _minProductId = minProductId;
             _maxProductId = maxProductId;
             _minCustomerId = minCustomerId;
@@ -27,10 +25,8 @@ namespace SparkFlume.EventGenerator.Logic
             _maxRevenue = maxRevenue;
         }
 
-        public async Task<Event> GetNextEvent()
+        public Event GetNextEvent()
         {
-            await Task.Delay(_generationTimeout);
-
             var newEvent = _random.Next(0, 1) == 0
                 ? (Event)new ViewEvent
                 {
