@@ -1,5 +1,5 @@
 ### SYFOX - API ####
-FROM ubuntu:16.04
+FROM ubuntu:17.10
 
 # .NET Core Setup
 RUN echo "#####   .NET Core SDK Setup   #####" && \
@@ -9,21 +9,17 @@ RUN echo "#####   .NET Core SDK Setup   #####" && \
     apt-get update && \
     apt-get install dotnet-sdk-2.1
 
+CMD ["bash"]
 
 RUN mkdir -p /usr/src/SparkFlume
-WORKDIR /usr/src/app
-
-COPY pom.xml /usr/src/app/pom.xml
-RUN mvn validate && \
-mvn dependency:resolve && \
-mvn dependency:resolve-plugins
+WORKDIR /usr/src/SparkFlume
 
 ADD entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 ADD . /usr/src/SparkFlume
-RUN dotnet build
 
-EXPOSE 8000 8001
+# build & publish .NET Core app
+RUN dotnet publish SparkFlume.EventGenerator/SparkFlume.EventGenerator.csproj -c Release
 
-CMD ["/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
