@@ -1,12 +1,17 @@
-﻿using System;
+﻿using System.Threading.Tasks;
+using CommandLine;
+using SparkFlume.Output.Verbs;
 
 namespace SparkFlume.Output
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static async Task<int> Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            return await Parser.Default.ParseArguments<OutputParameters>(args)
+                               .MapResult(
+                                   new OutputVerb().Execute,
+                                   err => Task.FromResult(-1));
         }
     }
 }
