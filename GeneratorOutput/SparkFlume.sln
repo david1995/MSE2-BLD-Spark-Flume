@@ -3,11 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2026
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkFlume.EventGenerator", "SparkFlume.EventGenerator\SparkFlume.EventGenerator.csproj", "{EF56468B-0EAB-437B-BE01-BAABCF019B7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SparkFlume.EventGenerator", "SparkFlume.EventGenerator\SparkFlume.EventGenerator.csproj", "{EF56468B-0EAB-437B-BE01-BAABCF019B7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkFlume.Output", "SparkFlume.Output\SparkFlume.Output.csproj", "{40DDB091-E45B-4F61-A131-CD5247A10F8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SparkFlume.Output", "SparkFlume.Output\SparkFlume.Output.csproj", "{40DDB091-E45B-4F61-A131-CD5247A10F8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SparkFlume.Common", "SparkFlume.Common\SparkFlume.Common.csproj", "{C79EB4A4-62DA-465F-9CA4-F23D061D3102}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SparkFlume.Common", "SparkFlume.Common\SparkFlume.Common.csproj", "{C79EB4A4-62DA-465F-9CA4-F23D061D3102}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{4B01CE7A-3D95-4F96-B451-34644C0EF92F}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "SparkFlume.Spark", "..\SparkFlume.Spark\SparkFlume.Spark.pyproj", "{64C5B6D2-EB1A-4A9E-B99F-7F94EB7BC9D1}"
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "SparkFlume.Flume", "SparkFlume.Flume\SparkFlume.Flume.pyproj", "{5147E3A6-8902-4EF6-B3EE-385634AC808D}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SparkFlume.Database", "SparkFlume.Database\SparkFlume.Database.sqlproj", "{EA2D6C97-FB5E-4B67-91F0-5C0B247CAEF0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +35,20 @@ Global
 		{C79EB4A4-62DA-465F-9CA4-F23D061D3102}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C79EB4A4-62DA-465F-9CA4-F23D061D3102}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C79EB4A4-62DA-465F-9CA4-F23D061D3102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B01CE7A-3D95-4F96-B451-34644C0EF92F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B01CE7A-3D95-4F96-B451-34644C0EF92F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B01CE7A-3D95-4F96-B451-34644C0EF92F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B01CE7A-3D95-4F96-B451-34644C0EF92F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64C5B6D2-EB1A-4A9E-B99F-7F94EB7BC9D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64C5B6D2-EB1A-4A9E-B99F-7F94EB7BC9D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5147E3A6-8902-4EF6-B3EE-385634AC808D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5147E3A6-8902-4EF6-B3EE-385634AC808D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA2D6C97-FB5E-4B67-91F0-5C0B247CAEF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA2D6C97-FB5E-4B67-91F0-5C0B247CAEF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA2D6C97-FB5E-4B67-91F0-5C0B247CAEF0}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{EA2D6C97-FB5E-4B67-91F0-5C0B247CAEF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA2D6C97-FB5E-4B67-91F0-5C0B247CAEF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA2D6C97-FB5E-4B67-91F0-5C0B247CAEF0}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

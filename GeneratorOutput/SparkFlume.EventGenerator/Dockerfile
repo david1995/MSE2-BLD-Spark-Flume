@@ -1,25 +1,19 @@
-### SYFOX - API ####
-FROM ubuntu:17.10
+FROM microsoft/dotnet:2.0-runtime AS base
+WORKDIR /app
 
-# .NET Core Setup
-RUN echo "#####   .NET Core SDK Setup   #####" && \
-    wget -q https://packages.microsoft.com/config/ubuntu/17.10/packages-microsoft-prod.deb && \
-    dpkg -i packages-microsoft-prod.deb && \
-    apt-get install apt-transport-https && \
-    apt-get update && \
-    apt-get install dotnet-sdk-2.1
+FROM microsoft/dotnet:2.0-sdk AS build
+WORKDIR /src
+COPY SparkFlume.EventGenerator/SparkFlume.EventGenerator.csproj SparkFlume.EventGenerator/
+COPY SparkFlume.Common/SparkFlume.Common.csproj SparkFlume.Common/
+RUN dotnet restore SparkFlume.EventGenerator/SparkFlume.EventGenerator.csproj
+COPY . .
+WORKDIR /src/SparkFlume.EventGenerator
+RUN dotnet build SparkFlume.EventGenerator.csproj -c Release -o /app
 
-CMD ["bash"]
+FROM build AS publish
+RUN dotnet publish SparkFlume.EventGenerator.csproj -c Release -o /app
 
-RUN mkdir -p /usr/src/SparkFlume
-WORKDIR /usr/src/SparkFlume
-
-ADD entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-ADD . /usr/src/SparkFlume
-
-# build & publish .NET Core app
-RUN dotnet publish SparkFlume.EventGenerator/SparkFlume.EventGenerator.csproj -c Release
-
-ENTRYPOINT ["/entrypoint.sh"]
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app .
+ENTRYPOINT ["dotnet", "SparkFlume.EventGenerator.dll"]

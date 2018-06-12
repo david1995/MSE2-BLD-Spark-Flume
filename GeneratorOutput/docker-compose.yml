@@ -1,0 +1,15 @@
+version: '3.4'
+
+services:
+  sparkflume.eventgenerator:
+    image: ${DOCKER_REGISTRY}sparkflumeeventgenerator
+    build:
+      context: .
+      dockerfile: SparkFlume.EventGenerator/Dockerfile
+
+  sparkflume.output:
+    image: ${DOCKER_REGISTRY}sparkflumeoutput
+    build:
+      context: .
+      dockerfile: SparkFlume.Output/Dockerfile
+
