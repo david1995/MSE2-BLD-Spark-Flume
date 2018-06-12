@@ -13,3 +13,9 @@ services:
       context: .
       dockerfile: SparkFlume.Output/Dockerfile
 
+  sparkflume.database:
+    image: ${DOCKER_REGISTRY}sparkflumedatabase
+    build:
+      context: .
+      dockerfile: SparkFlume.Database/Dockerfile
+
