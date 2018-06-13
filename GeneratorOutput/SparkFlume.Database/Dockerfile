@@ -31,8 +31,9 @@ ENV MYSQL_ROOT_PASSWORD docker
 ENV MYSQL_DATABASE Products
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
-COPY healthcheck.sh /healthcheck.sh
 RUN chmod +x /docker-entrypoint.sh
+
+COPY healthcheck.sh /healthcheck.sh
 RUN sed -Ei 's/^(bind-address|log)/#&/' /etc/my.cnf
 COPY CreateDatabase.sql /docker-entrypoint-initdb.d/CreateDatabase.sql
 ENTRYPOINT ["/docker-entrypoint.sh"]

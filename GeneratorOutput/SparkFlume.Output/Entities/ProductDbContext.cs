@@ -20,5 +20,12 @@ namespace SparkFlume.Output.Entities
             base.OnConfiguring(optionsBuilder);
             optionsBuilder.UseMySQL($@"Server={_dbaddress};Database={_database};Trusted_Connection=True;");
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Product>()
+                        .HasKey(product => new { product.Id, product.Minute });
+        }
     }
 }
