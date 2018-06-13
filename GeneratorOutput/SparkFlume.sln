@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SparkFlume.Output", "SparkF
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{4B01CE7A-3D95-4F96-B451-34644C0EF92F}"
 EndProject
-Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "SparkFlume.Spark", "..\SparkFlume.Spark\SparkFlume.Spark.pyproj", "{64C5B6D2-EB1A-4A9E-B99F-7F94EB7BC9D1}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SparkFlume.Database", "SparkFlume.Database", "{83E9BE5F-6184-4C18-9C98-853D17A68BE8}"
 	ProjectSection(SolutionItems) = preProject
 		SparkFlume.Database\CreateDatabase.sql = SparkFlume.Database\CreateDatabase.sql
@@ -26,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SparkFlume.Flume", "SparkFl
 		SparkFlume.Flume\flume-env.sh = SparkFlume.Flume\flume-env.sh
 		SparkFlume.Flume\flume.conf = SparkFlume.Flume\flume.conf
 	EndProjectSection
+EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "SparkFlume.Spark", "SparkFlume.Spark\SparkFlume.Spark.pyproj", "{64C5B6D2-EB1A-4A9E-B99F-7F94EB7BC9D1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
