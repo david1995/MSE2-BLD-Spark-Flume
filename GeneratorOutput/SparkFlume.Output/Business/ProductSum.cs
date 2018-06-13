@@ -1,4 +1,4 @@
-﻿namespace SparkFlume.Common.Business
+﻿namespace SparkFlume.Output.Business
 {
     public class ProductSum
     {

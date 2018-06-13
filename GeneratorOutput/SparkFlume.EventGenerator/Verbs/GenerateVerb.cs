@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using SparkFlume.Common.Business;
+using SparkFlume.EventGenerator.Business;
 using SparkFlume.EventGenerator.Entities;
 using SparkFlume.EventGenerator.Logic;
 

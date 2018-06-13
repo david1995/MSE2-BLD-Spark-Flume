@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using SparkFlume.Common.Business;
+using SparkFlume.EventGenerator.Business;
 
 namespace SparkFlume.EventGenerator.Logic
 {

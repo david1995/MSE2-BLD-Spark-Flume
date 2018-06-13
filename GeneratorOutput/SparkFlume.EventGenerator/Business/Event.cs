@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SparkFlume.Common.Business
+namespace SparkFlume.EventGenerator.Business
 {
     public abstract class Event
     {

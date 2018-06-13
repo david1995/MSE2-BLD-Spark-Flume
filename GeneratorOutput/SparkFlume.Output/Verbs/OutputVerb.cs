@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using SparkFlume.Common.Business;
+using SparkFlume.Output.Business;
 using SparkFlume.Output.Entities;
 
 namespace SparkFlume.Output.Verbs

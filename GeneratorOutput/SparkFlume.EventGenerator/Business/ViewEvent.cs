@@ -1,4 +1,4 @@
-﻿namespace SparkFlume.Common.Business
+﻿namespace SparkFlume.EventGenerator.Business
 {
     public class ViewEvent : Event
     {
