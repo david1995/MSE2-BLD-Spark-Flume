@@ -1,6 +1,6 @@
 FROM debian:stretch
 
-RUN set -x && apt-get update && apt-get install -y wget openjdk-8-jdk-headless
+RUN set -x && apt-get update && apt-get install -y wget openjdk-8-jdk-headless curl
 
 RUN set -x \
     && mkdir /flume \

@@ -21,7 +21,7 @@ WORKDIR /app
 
 RUN wget http://central.maven.org/maven2/org/apache/spark/spark-streaming-flume-assembly_2.11/2.3.0/spark-streaming-flume-assembly_2.11-2.3.0.jar
 
-COPY SparkFlume.Spark.py SparkFlume.Spark.py
+COPY SparkFlume.Spark.py /SparkFlume.Spark.py
 COPY entrypoint.sh /entrypoint.sh
 
 RUN chmod +x /entrypoint.sh
