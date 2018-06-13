@@ -2,6 +2,10 @@ FROM microsoft/dotnet:2.0-runtime AS base
 WORKDIR /app
 
 FROM microsoft/dotnet:2.0-sdk AS build
+
+COPY entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
+
 WORKDIR /src
 COPY SparkFlume.EventGenerator.csproj SparkFlume.EventGenerator.csproj
 RUN dotnet restore SparkFlume.EventGenerator.csproj
@@ -15,5 +19,4 @@ RUN dotnet publish SparkFlume.EventGenerator.csproj -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-RUN chmod +x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
