@@ -1,5 +1,4 @@
-create database SparkFlume;
-use SparkFlume;
+use Products;
 
 create table if not exists Product (
 	Id int not null,
