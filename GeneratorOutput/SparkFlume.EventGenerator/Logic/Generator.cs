@@ -27,7 +27,7 @@ namespace SparkFlume.EventGenerator.Logic
 
         public Event GetNextEvent()
         {
-            var newEvent = _random.Next(0, 1) == 0
+            var newEvent = _random.NextDouble() < 0.5d
                 ? (Event)new ViewEvent
                 {
                     ProductId = _random.Next(_minProductId, _maxProductId),
