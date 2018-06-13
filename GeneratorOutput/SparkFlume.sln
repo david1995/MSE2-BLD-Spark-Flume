@@ -16,6 +16,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SparkFlume.Database", "Spar
 		SparkFlume.Database\CreateDatabase.sql = SparkFlume.Database\CreateDatabase.sql
 		SparkFlume.Database\docker-entrypoint.sh = SparkFlume.Database\docker-entrypoint.sh
 		SparkFlume.Database\Dockerfile = SparkFlume.Database\Dockerfile
+		SparkFlume.Database\healthcheck.sh = SparkFlume.Database\healthcheck.sh
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SparkFlume.Flume", "SparkFlume.Flume", "{02A56F85-57DE-49C1-BBFD-5CBC85E63009}"

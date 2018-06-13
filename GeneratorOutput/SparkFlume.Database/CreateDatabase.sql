@@ -6,6 +6,6 @@ create table if not exists Product (
 	Minute datetime not null,
 	Views bigint not null,
 	Purchases bigint not null,
-	Revenue decimal not null
-	constraint PK_Product primary key (Id, Minute)
+	Revenue decimal not null,
+	primary key (Id,Minute)
 );
