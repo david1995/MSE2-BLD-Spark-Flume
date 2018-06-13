@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Net;
 using CommandLine;
 
 namespace SparkFlume.Output.Verbs
@@ -6,12 +6,12 @@ namespace SparkFlume.Output.Verbs
     [Verb("output", HelpText = "Reads data from a database.")]
     public class OutputParameters
     {
-        public OutputParameters(Uri databaseUri)
+        public OutputParameters(IPEndPoint database)
         {
-            DatabaseUri = databaseUri;
+            Database = database;
         }
 
         [Option(Required = true)]
-        public Uri DatabaseUri { get; }
+        public IPEndPoint Database { get; }
     }
 }

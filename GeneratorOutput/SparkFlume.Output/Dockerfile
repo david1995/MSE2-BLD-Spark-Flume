@@ -15,4 +15,4 @@ RUN dotnet publish SparkFlume.Output.csproj -c Release -o /app
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "SparkFlume.Output.dll"]
+ENTRYPOINT ["/entrypoint.sh"]
