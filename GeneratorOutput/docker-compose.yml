@@ -10,7 +10,7 @@ services:
 
   sparkflume.spark:
     image: ${DOCKER_REGISTRY}sparkflumespark
-    depends_on: [ $sparkflume.database ]
+    depends_on: [ sparkflume.database ]
     build:
       context: .
       dockerfile: SparkFlume.Flume/Dockerfile
