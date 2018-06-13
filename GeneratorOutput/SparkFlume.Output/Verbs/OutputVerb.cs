@@ -138,7 +138,7 @@ namespace SparkFlume.Output.Verbs
             var now = DateTime.Now;
             var to = now - durationToInclude;
 
-            var groupings = from p in dbContext.Products
+            var groupings = from p in dbContext.Products.AsEnumerable()
                             where p.Minute >= to
                             group p by p.Id;
 
