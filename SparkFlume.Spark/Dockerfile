@@ -2,7 +2,7 @@ FROM python:3.6-stretch
 
 RUN set -x \
     && apt-get update \
-    && apt-get install wget openjdk-8-jdk-headless
+    && apt-get install -y wget openjdk-8-jdk-headless
 
 # install spark
 RUN mkdir /spark \
