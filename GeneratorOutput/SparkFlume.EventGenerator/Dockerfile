@@ -3,8 +3,8 @@ WORKDIR /app
 
 FROM microsoft/dotnet:2.0-sdk AS build
 WORKDIR /src
-COPY SparkFlume.EventGenerator.csproj SparkFlume.EventGenerator/
-COPY ../SparkFlume.Common/SparkFlume.Common.csproj SparkFlume.Common/
+COPY SparkFlume.EventGenerator/SparkFlume.EventGenerator.csproj SparkFlume.EventGenerator/
+COPY SparkFlume.Common/SparkFlume.Common.csproj SparkFlume.Common/
 RUN dotnet restore SparkFlume.EventGenerator/SparkFlume.EventGenerator.csproj
 COPY . .
 WORKDIR /src/SparkFlume.EventGenerator
