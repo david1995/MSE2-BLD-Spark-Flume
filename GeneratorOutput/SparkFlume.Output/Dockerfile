@@ -5,7 +5,7 @@ FROM microsoft/dotnet:2.0-sdk AS build
 
 WORKDIR /src
 COPY SparkFlume.Output.csproj SparkFlume.Output.csproj
-RUN dotnet restore SparkFlume.Output/SparkFlume.Output.csproj
+RUN dotnet restore SparkFlume.Output.csproj
 COPY . .
 
 RUN dotnet build SparkFlume.Output.csproj -c Release -o /app
