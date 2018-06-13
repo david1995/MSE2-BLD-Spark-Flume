@@ -3,35 +3,35 @@ version: '3.4'
 services:
 
   sparkflume.database:
-    image: ${DOCKER_REGISTRY}sparkflume/database
+    image: ${DOCKER_REGISTRY}sparkflumedatabase
     build:
       context: .
       dockerfile: SparkFlume.Database/Dockerfile
 
   sparkflume.flume:
-    image: ${DOCKER_REGISTRY}sparkflume/spark
-    depends_on: [ sparkflume/database ]
+    image: ${DOCKER_REGISTRY}sparkflumespark
+    depends_on: [ $sparkflume.database ]
     build:
       context: .
       dockerfile: SparkFlume.Flume/Dockerfile
 
   sparkflume.flume:
     image: ${DOCKER_REGISTRY}sparkflume/flume
-    depends_on: [ sparkflume/spark ]
+    depends_on: [ sparkflume.spark ]
     build:
       context: .
       dockerfile: SparkFlume.Flume/Dockerfile
 
   sparkflume.eventgenerator:
-    image: ${DOCKER_REGISTRY}sparkflume/eventgenerator
-    depends_on: [ sparkflume/flume ]
+    image: ${DOCKER_REGISTRY}sparkflumeeventgenerator
+    depends_on: [ sparkflume.flume ]
     build:
       context: .
       dockerfile: SparkFlume.EventGenerator/Dockerfile
 
   sparkflume.output:
-    image: ${DOCKER_REGISTRY}sparkflume/output
-    depends_on: [ sparkflume/database ]
+    image: ${DOCKER_REGISTRY}sparkflumeoutput
+    depends_on: [ sparkflume.database ]
     build:
       context: .
       dockerfile: SparkFlume.Output/Dockerfile
