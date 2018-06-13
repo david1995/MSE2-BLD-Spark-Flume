@@ -28,7 +28,7 @@ VOLUME /var/lib/mysql
 ENV MYSQL_USER docker
 ENV MYSQL_PASSWORD docker
 ENV MYSQL_ROOT_PASSWORD docker
-ENV MYSQL_DATABASE statistics
+ENV MYSQL_DATABASE Products
 
 COPY docker-entrypoint.sh /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
