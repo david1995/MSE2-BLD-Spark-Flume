@@ -14,5 +14,7 @@ namespace SparkFlume.Output.Entities
         public long Views { get; set; }
 
         public long Purchases { get; set; }
+
+        public decimal Revenue { get; set; }
     }
 }
