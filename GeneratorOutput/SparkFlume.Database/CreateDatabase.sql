@@ -1,10 +1,20 @@
 use Products;
 
-create table if not exists Product (
-	Id int not null,
-	Minute datetime not null,
-	Views bigint not null,
-	Purchases bigint not null,
-	Revenue decimal not null,
-	primary key (Id,Minute)
+CREATE TABLE `__EFMigrationsHistory` (
+    `MigrationId` varchar(150) NOT NULL,
+    `ProductVersion` varchar(32) NOT NULL,
+    PRIMARY KEY (`MigrationId`)
 );
+
+CREATE TABLE `Products` (
+    `Id` int NOT NULL,
+    `Minute` datetime NOT NULL,
+    `Purchases` bigint NOT NULL,
+    `Revenue` decimal(18, 2) NOT NULL,
+    `Views` bigint NOT NULL,
+    PRIMARY KEY (`Id`, `Minute`)
+);
+
+INSERT INTO `__EFMigrationsHistory` (`MigrationId`, `ProductVersion`)
+VALUES ('20180620163425_InitialDatabase', '2.0.3-rtm-10026');
+

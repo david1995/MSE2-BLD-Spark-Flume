@@ -1,3 +1,3 @@
 #!/bin/bash
 
-exec dotnet SparkFlume.EventGenerator.dll generate --purchasestarget http://127.0.0.1:28000 --viewstarget http://127.0.0.1:28001
+exec dotnet SparkFlume.EventGenerator.dll generate --purchasestarget http://flume:28001 --viewstarget http://flume:28000

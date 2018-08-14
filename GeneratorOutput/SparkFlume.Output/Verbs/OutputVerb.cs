@@ -4,6 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 using SparkFlume.Output.Business;
 using SparkFlume.Output.Entities;
 
@@ -11,105 +16,87 @@ namespace SparkFlume.Output.Verbs
 {
     public class OutputVerb
     {
+        public const string DefaultConfigFile = "config.json";
+
         private readonly AutoResetEvent _autoReset = new AutoResetEvent(true);
+        private readonly StringFormatter _stringFormatter = new StringFormatter();
 
-        public Task<int> Execute(OutputParameters parameters)
+        public async Task<int> Execute(OutputParameters parameters)
         {
-            Console.WriteLine("To quit the application, press [ENTER]");
+            string configFile = parameters.ConfigFilePath ?? DefaultConfigFile;
+            string configFileContent = File.ReadAllText(configFile);
 
-            using (var dbcontext = new ProductDbContext(parameters.DatabaseServer, parameters.DatabaseName))
+            var configuration = JsonConvert.DeserializeObject<Configuration>(configFileContent);
+            string databaseServer = parameters.DatabaseServer ?? configuration.DatabaseServer;
+            string databaseName = parameters.DatabaseName ?? configuration.DatabaseName;
+            string username = parameters.Username ?? configuration.Username;
+            string password = parameters.Password ?? configuration.Password;
+            int checkInterval = parameters.CheckInterval ?? configuration.CheckInterval;
+            int topAmount = parameters.TopAmount ?? configuration.TopAmount;
+            int minutesToInclude = parameters.MinutesToInclude ?? configuration.MinutesToInclude;
+            int secondsToWait = parameters.SecondsToWait ?? configuration.SecondsToWait;
+
+            Console.TreatControlCAsInput = true;
+
+            var cancellationTokenSource = new CancellationTokenSource();
+            
+            var logConfiguration = new LoggingConfiguration();
+
+            var now = DateTime.Now;
+            var logfile = new FileTarget { FileName = $"generated-{now:yyyyMMddHHmmss}.log" };
+            var logconsole = new ConsoleTarget();
+
+            logConfiguration.AddRule(LogLevel.Info, LogLevel.Fatal, logconsole);
+            logConfiguration.AddRule(LogLevel.Debug, LogLevel.Fatal, logfile);
+
+            LogManager.Configuration = logConfiguration;
+
+            var logger = LogManager.GetCurrentClassLogger();
+
+            logger.Log(LogLevel.Info, $"Waiting {secondsToWait}s for database startup...");
+
+            await Task.Delay(TimeSpan.FromSeconds(secondsToWait));
+
+            logger.Log(LogLevel.Info, "To quit the application, press [CTRL]+[C]");
+            logger.Log(LogLevel.Info, $"Connecting to {databaseServer}; Database name {databaseName}; User: {username}");
+
+            using (var dbcontext = new ProductDbContext(databaseServer, databaseName, username, password))
             {
-                var cancellationTokenSource = new CancellationTokenSource();
-
-                var timeoutLoopTask = TimeoutLoop(parameters.CheckInterval, cancellationTokenSource);
-                var fetchLoopTask = FetchLoop(parameters.TopAmount, TimeSpan.FromMilliseconds(parameters.MinutesToInclude), dbcontext, cancellationTokenSource);
-
-                Console.ReadLine();
-
-                Console.WriteLine("Cancelling...");
-                cancellationTokenSource.Cancel();
-
-                Task.WaitAll(timeoutLoopTask, fetchLoopTask);
+                dbcontext.Database.Migrate();
+                var timeoutLoopTask = TimeoutLoop(checkInterval, cancellationTokenSource);
+                var fetchLoopTask = FetchLoop(topAmount, TimeSpan.FromMilliseconds(minutesToInclude), dbcontext, cancellationTokenSource);
+                var inputLoopTask = InputLoopAsync(cancellationTokenSource);
+                
+                Task.WaitAll(timeoutLoopTask, fetchLoopTask, inputLoopTask);
             }
 
-            Console.WriteLine("Canceled. Goodbye");
 
-            return Task.FromResult(0);
+            return 0;
         }
 
-        private void PrintResults(TextWriter output, IEnumerable<ProductSum> results)
-            => PrintResults(output, results is ProductSum[] resultsArray ? resultsArray : results.ToArray());
-
-        private void PrintResults(TextWriter output, params ProductSum[] results)
+        private Task InputLoopAsync(CancellationTokenSource ct)
         {
-            string[] titles = { "Product ID", "Views", "Purchases", "Revenue" };
-            var valueStrings = results.Select(
-                                          r => new[]
-                                          {
-                                              $"{r.Id}",
-                                              $"{r.Views}",
-                                              $"{r.Purchases}",
-                                              $"{r.Revenue}"
-                                          })
-                                      .ToArray();
+            var logger = LogManager.GetCurrentClassLogger();
 
-            var allStrings = new[] { titles }.Concat(valueStrings).ToArray();
-            var maxPerColumn = allStrings.Aggregate(new int[titles.Length], (acc, c) =>
+            if (!Console.IsInputRedirected)
             {
-                var replacementMatrix = acc.Zip(c, (max, current) => (Max: max, CurrentLength: current.Length))
-                                           .Select(t => t.Max < t.CurrentLength)
-                                           .ToArray();
+                ConsoleKeyInfo consoleKeyInfo;
 
-                for (int n = 0; n < replacementMatrix.Length; n++)
+                do
                 {
-                    if (replacementMatrix[n])
-                    {
-                        acc[n] = c[n].Length;
-                    }
+                    consoleKeyInfo = Console.ReadKey();
                 }
-
-                return acc;
-            });
-
-            void WriteString(string value, int colWidth, char paddingChar = ' ')
+                while ((consoleKeyInfo.Modifiers & ConsoleModifiers.Control) != ConsoleModifiers.Control
+                       && consoleKeyInfo.Key != ConsoleKey.C);
+            }
+            else
             {
-                string stringToWrite = $"|{paddingChar}{value.PadRight(colWidth, paddingChar)}{paddingChar}";
-                output.Write(stringToWrite);
+                Console.ReadLine();
             }
 
-            void WriteTableLine()
-            {
-                foreach (int col in maxPerColumn)
-                {
-                    WriteString(string.Empty, col, '-');
-                }
-
-                output.WriteLine("|");
-            }
-
-            WriteTableLine();
-
-            for (int n = 0; n < titles.Length; n++)
-            {
-                WriteString(titles[n], maxPerColumn[n]);
-            }
-
-            output.WriteLine("|");
-
-            WriteTableLine();
-
-            foreach (var row in valueStrings)
-            {
-                for (int x = 0; x < titles.Length; x++)
-                {
-                    WriteString(row[x], maxPerColumn[x]);
-                }
-
-                output.WriteLine("|");
-            }
-
-            WriteTableLine();
-            output.WriteLine();
+            logger.Log(LogLevel.Info, "Cancelling...");
+            ct.Cancel();
+            return Task.CompletedTask;
         }
 
         private async Task FetchLoop(int amountProducts, TimeSpan durationToInclude, ProductDbContext dbContext, CancellationTokenSource ct)
@@ -117,8 +104,8 @@ namespace SparkFlume.Output.Verbs
             while (!ct.IsCancellationRequested)
             {
                 var currentResult = await GetNextProducts(amountProducts, durationToInclude, dbContext);
-
-                PrintResults(Console.Out, currentResult);
+                
+                _stringFormatter.PrintResults(Console.Out, currentResult);
             }
         }
 

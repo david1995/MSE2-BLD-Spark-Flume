@@ -1,0 +1,10 @@
+﻿{
+    "DatabaseServer": "database",
+    "DatabaseName": "Products",
+    "Username": "docker",
+    "Password": "docker",
+    "MinutesToInclude": 5,
+    "TopAmount": 10,
+    "CheckInterval": 5000,
+    "SecondsToWait": 30
+}
